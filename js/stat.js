@@ -17,15 +17,16 @@ var renderCloud = function (ctx, CLOUD_X1, CLOUD_Y1, color) {
   var indentCloudHeidht = CLOUD_Y1 + CLOUD_HEIGHT;
   var startRadiusX = CLOUD_X1 + CLOUD_WIDTH - RADIUS_BEGIN;
   var startRadiusY = CLOUD_Y1 + CLOUD_HEIGHT - RADIUS_BEGIN;
+  var centerOfRadius = CLOUD_X1 + CLOUD_WIDTH - RADIUS_MAX_CIRCLE;
 
   ctx.fillStyle = color;
 
   ctx.beginPath();
   ctx.moveTo(CLOUD_X1, CLOUD_Y1);
   ctx.lineTo(startRadiusX - RADIUS_MAX_CIRCLE, CLOUD_Y1);
-  ctx.bezierCurveTo(startRadiusX, CLOUD_Y1, indentCloudWidth - RADIUS_MAX_CIRCLE, CLOUD_Y1 + RADIUS_MAX_CIRCLE, indentCloudWidth, CLOUD_Y1 + RADIUS_BEGIN);
+  ctx.bezierCurveTo(startRadiusX, CLOUD_Y1, centerOfRadius, CLOUD_Y1 + RADIUS_MAX_CIRCLE, indentCloudWidth, CLOUD_Y1 + RADIUS_BEGIN);
   ctx.lineTo(indentCloudWidth, startRadiusY - RADIUS_MAX_CIRCLE);
-  ctx.bezierCurveTo(indentCloudWidth, startRadiusY, indentCloudWidth - RADIUS_MAX_CIRCLE, indentCloudHeidht - RADIUS_MAX_CIRCLE, startRadiusX, indentCloudHeidht);
+  ctx.bezierCurveTo(indentCloudWidth, startRadiusY, centerOfRadius, indentCloudHeidht - RADIUS_MAX_CIRCLE, startRadiusX, indentCloudHeidht);
   ctx.lineTo(CLOUD_X1, indentCloudHeidht);
   ctx.closePath();
   ctx.fill();
@@ -70,7 +71,7 @@ window.renderStatistics = function (ctx, players, times) {
     ctx.fillStyle = '#000';
     ctx.fillText(players[i], textLocationColumnX, textLocationColumnY);
     ctx.fillText(Math.floor(times[i]), indentTextX + columnIndent * i, textLocationColumnY - GAP - FONT_GAP - proportionColumns);
-    ctx.fillStyle = (players[i] === 'Вы') ? 'rgba(255, 0, 0, 1)' : 'rgba(' + getRandomColorRGBA(1, 255) + ', ' + getRandomColorRGBA(1, 255) + ', ' + 255 + ', ' + 1 + ')';
+    ctx.fillStyle = (players[i] === 'Вы') ? 'rgba(255, 0, 0, 1)' : 'rgba(' + getRandomColorRGBA(1, 255) + ', ' + getRandomColorRGBA(1, 255) + ', 255, 1)';
     ctx.fillRect(textLocationColumnX, textLocationColumnY - FONT_GAP, BAR_WIDTH, -proportionColumns);
   }
 };
