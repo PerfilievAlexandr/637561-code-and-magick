@@ -88,6 +88,7 @@ var closePopup = function () {
   }
 
   setup.classList.add('hidden');
+  setup.removeAttribute('style');
 
   document.removeEventListener('keydown', onPopupEscClose);
 };
