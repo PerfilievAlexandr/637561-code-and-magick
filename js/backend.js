@@ -1,68 +1,40 @@
 'use strict';
 (function () {
 
-  var load = function (onLoad, onError) {
+  var ERROR_WINDOW = document.createElement('div');
+  var HEADER = document.querySelector('header');
 
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', function () {
-      var error;
-      switch (xhr.status) {
-        case 200:
-          load(xhr.response);
-          break;
-        case 400:
-          error = 'Неверный запрос';
-          break;
-        case 401:
-          error = 'Пользователь не авторизован';
-          break;
-        case 404:
-          error = 'Ничего не найдено';
-          break;
+  var onError = function (message) {
+    ERROR_WINDOW.style.width = '400px';
+    ERROR_WINDOW.style.height = '150px';
+    ERROR_WINDOW.style.backgroundColor = 'red';
+    ERROR_WINDOW.style.top = '200px';
+    ERROR_WINDOW.style.right = '20px';
+    ERROR_WINDOW.style.borderRadius = '20px';
+    ERROR_WINDOW.style.position = 'absolute';
 
-        default:
-          error = 'Статус ответа: : ' + xhr.status + ' ' + xhr.statusText;
-      }
-
-      if (error) {
-        onError(error);
-      }
-    });
-
-    xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соедиения');
-    });
-
-    xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
-    });
-
-    xhr.timeout = 10000;
-    xhr.open('GET', 'https://js.dump.academy/code-and-magick/data');
-    xhr.send();
+    HEADER.appendChild(ERROR_WINDOW);
+    ERROR_WINDOW.textContent = message;
   };
 
 
-  var save = function (onLoad, onError) {
-
+  var ajax = function (url, method, data, callback) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
-
     xhr.addEventListener('load', function () {
       var error;
       switch (xhr.status) {
         case 200:
-          onLoad(xhr.response);
+          callback(xhr.response);
           break;
         case 400:
-          error = 'Неверный запрос';
+          error = 'Неверный запрос' + xhr.statusText;
           break;
         case 401:
-          error = 'Пользователь не авторизован';
+          error = 'Пользователь не авторизован' + xhr.statusText;
           break;
         case 404:
-          error = 'Ничего не найдено';
+          error = 'Ничего не найдено' + xhr.statusText;
           break;
 
         default:
@@ -81,18 +53,15 @@
     xhr.addEventListener('timeout', function () {
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
+
     xhr.timeout = 10000;
-
-
-    xhr.open('POST', 'https://js.dump.academy/code-and-magick');
-    xhr.send(onLoad);
+    xhr.open(method, url);
+    xhr.send(data);
   };
 
   window.backend = {
-    load: load,
-    save: save
+    ajax: ajax
   };
-
 })();
 
 

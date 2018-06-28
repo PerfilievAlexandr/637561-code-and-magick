@@ -10,8 +10,6 @@
   var fireball = document.querySelector('.setup-fireball-wrap');
   var inputCoatColor = window.setup.querySelector('input[name=coat-color]');
   var inputEyesColor = window.setup.querySelector('input[name=eyes-color]');
-  var header = document.querySelector('header');
-  var errorWindow = document.createElement('div');
   var form = document.querySelector('.setup-wizard-form');
 
 
@@ -53,28 +51,16 @@
     });
   };
 
-  errorWindow.style.width = '400px';
-  errorWindow.style.height = '150px';
-  errorWindow.style.backgroundColor = 'red';
-  errorWindow.style.top = '200px';
-  errorWindow.style.right = '20px';
-  errorWindow.style.borderRadius = '20px';
-  errorWindow.style.position = 'absolute';
-
-
-  var onError = function (message) {
-    header.appendChild(errorWindow);
-    errorWindow.textContent = message;
-  };
 
   form.addEventListener('submit', function (evt) {
-    window.backend.save(new FormData(form), function () {
+    evt.preventDefault();
+    var formData = new FormData(form);
+    window.backend.ajax('https://js.dump.academy/code-and-magick', 'POST', formData, function () {
       window.setup.classList.add('hidden');
     });
-    evt.preventDefault();
   });
 
-  window.backend.save(onLoad, onError);
-  window.backend.load(onLoad, onError);
+
+  window.backend.ajax('https://js.dump.academy/code-and-magick/data', 'GET', null, onLoad);
 
 })();
