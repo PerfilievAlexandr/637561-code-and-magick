@@ -1,56 +1,62 @@
 'use strict';
 (function () {
 
-  var similarListElement = document.querySelector('.setup-similar-list');
-  var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
-  window.setup = document.querySelector('.setup');
-  var setupWizard = document.querySelector('.setup-wizard');
-  var wizardCoat = setupWizard.querySelector('.wizard-coat');
-  var wizardEyes = setupWizard.querySelector('.wizard-eyes');
-  var fireball = document.querySelector('.setup-fireball-wrap');
-  var inputCoatColor = window.setup.querySelector('input[name=coat-color]');
-  var inputEyesColor = window.setup.querySelector('input[name=eyes-color]');
+
   var form = document.querySelector('.setup-wizard-form');
 
+  var wizzards = [];
+  var coatColor;
+  var eyesColor;
 
-  var renderWizard = function (paramWizard) {
-    var element = similarWizardTemplate.cloneNode(true);
-    element.querySelector('.setup-similar-label').textContent = paramWizard.name;
-    element.querySelector('.wizard-coat').style.fill = paramWizard.colorCoat;
-    element.querySelector('.wizard-eyes').style.fill = paramWizard.colorEyes;
-    return element;
-  };
+  var getRank = function (wizzard) {
+    var rank = 0;
 
-
-  var onLoad = function (data) {
-
-    var fragment = document.createDocumentFragment();
-
-    for (var i = 0; i < 4; i++) {
-      fragment.appendChild(renderWizard(data[i]));
+    if (wizzard.colorCoat === coatColor) {
+      rank += 2;
+    }
+    if (wizzard.colorEyes === eyesColor) {
+      rank += 1;
     }
 
-    similarListElement.appendChild(fragment);
-
-    document.querySelector('.setup-similar').classList.remove('hidden');
-
-    wizardCoat.addEventListener('click', function () {
-      var indexElement = data[window.getRandomInt(0, data.length - 1)].colorCoat;
-      wizardCoat.style.fill = indexElement;
-      inputCoatColor.value = indexElement;
-    });
-
-    wizardEyes.addEventListener('click', function () {
-      var indexElement = data[window.getRandomInt(0, data.length - 1)].colorEyes;
-      wizardEyes.style.fill = indexElement;
-      inputEyesColor.value = indexElement;
-    });
-
-    fireball.addEventListener('click', function () {
-      fireball.style.background = data[window.getRandomInt(0, data.length - 1)].colorFireball;
-    });
+    return rank;
   };
 
+  var namesComparotor = function (left, right) {
+    if (left > right) {
+      return 1;
+    } else if (left < right) {
+      return -1;
+    } else {
+      return 0;
+    }
+  };
+
+  var updateWizzards = function () {
+
+    window.render.render(wizzards.sort(function (left, right) {
+      var rankDiff = getRank(right) - getRank(left);
+      if (rankDiff === 0) {
+        rankDiff = namesComparotor(left.name, right.name);
+      }
+      return rankDiff;
+    }));
+  };
+
+  var onEyesChange = window.debounse.debounse(function (color) {
+    eyesColor = color;
+    updateWizzards();
+  });
+
+
+  var onCoatChange = window.debounse.debounse(function (color) {
+    coatColor = color;
+    updateWizzards();
+  });
+
+  var onLoad = function (data) {
+    wizzards = data;
+    updateWizzards();
+  };
 
   form.addEventListener('submit', function (evt) {
     evt.preventDefault();
@@ -62,5 +68,10 @@
 
 
   window.backend.ajax('https://js.dump.academy/code-and-magick/data', 'GET', null, onLoad);
+
+  window.setup = {
+    onEyesChange: onEyesChange,
+    onCoatChange: onCoatChange
+  };
 
 })();
