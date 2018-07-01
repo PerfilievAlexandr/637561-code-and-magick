@@ -1,20 +1,20 @@
 'use strict';
 (function () {
 
-  var ERROR_WINDOW = document.createElement('div');
-  var HEADER = document.querySelector('header');
+  var errorWindow = document.createElement('div');
+  var header = document.querySelector('header');
 
   var onError = function (message) {
-    ERROR_WINDOW.style.width = '400px';
-    ERROR_WINDOW.style.height = '150px';
-    ERROR_WINDOW.style.backgroundColor = 'red';
-    ERROR_WINDOW.style.top = '200px';
-    ERROR_WINDOW.style.right = '20px';
-    ERROR_WINDOW.style.borderRadius = '20px';
-    ERROR_WINDOW.style.position = 'absolute';
+    errorWindow.style.width = '400px';
+    errorWindow.style.height = '150px';
+    errorWindow.style.backgroundColor = 'red';
+    errorWindow.style.top = '200px';
+    errorWindow.style.right = '20px';
+    errorWindow.style.borderRadius = '20px';
+    errorWindow.style.position = 'absolute';
 
-    HEADER.appendChild(ERROR_WINDOW);
-    ERROR_WINDOW.textContent = message;
+    header.appendChild(errorWindow);
+    errorWindow.textContent = message;
   };
 
 

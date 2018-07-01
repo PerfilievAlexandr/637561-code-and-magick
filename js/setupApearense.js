@@ -6,10 +6,11 @@
   var setupClose = document.querySelector('.setup-close');
   var textLogin = document.querySelector('.setup-user-name');
   var canClose = true;
+  var setup = document.querySelector('.setup');
 
 
   var openPopup = function () {
-    window.setup.classList.remove('hidden');
+    setup.classList.remove('hidden');
 
     document.addEventListener('keydown', onPopupEscClose);
   };
@@ -19,8 +20,8 @@
       return;
     }
 
-    window.setup.classList.add('hidden');
-    window.setup.removeAttribute('style');
+    setup.classList.add('hidden');
+    setup.removeAttribute('style');
 
     document.removeEventListener('keydown', onPopupEscClose);
   };

@@ -1,6 +1,7 @@
 'use strict';
 (function () {
-  var avatarSetup = window.setup.querySelector('.upload');
+  var setup = document.querySelector('.setup');
+  var avatarSetup = setup.querySelector('.upload');
 
   avatarSetup.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
